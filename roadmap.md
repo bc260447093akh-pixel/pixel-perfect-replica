@@ -1,4 +1,5 @@
 # Marketplace adaptation
+- [ ] Improve home shopping discovery and customer account navigation while preserving the original style.
 - [x] Add 160/320/640/1024px responsive WebP choices across product images with slot-specific sizes and lazy loading; first homepage banner stays eager. Image files and rendered page attributes verified without browser automation.
 - [x] Compress all four bundled product images to transparent WebP (94% smaller); verify image responses and homepage references without browser automation.
 - [x] Add blank-URL sample accounts and populated customer, seller, and admin pages with original controls; sample-data checks pass, no browser automation used.

@@ -1537,6 +1537,75 @@ input[type=radio], input[type=checkbox] { accent-color: var(--second-color); }
   .market-toolbar .button { padding: 1rem 1.5rem; }
   .market-search { flex-basis: 100%; }
 }
+/* Clear shopping entry points and an unframed customer workspace. */
+.market-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.market-banner-control { display: flex; justify-content: flex-end; padding-block: .75rem; }
+.market-banner-control .market-plain { display: flex; align-items: center; gap: .5rem; min-height: 44px; }
+.market-discovery { padding-block: 1.5rem 2.5rem; }
+.market-home-search { display: flex; gap: 1rem; align-items: stretch; max-width: 850px; margin-inline: auto; }
+.market-home-search .market-search { background: var(--container-color); }
+.market-home-search .button { flex-shrink: 0; }
+.market-popular-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem 1.5rem; margin-top: 1rem; }
+.market-popular-links a { color: var(--title-color); min-height: 44px; display: inline-flex; align-items: center; gap: .5rem; border-bottom: 2px solid var(--first-color); }
+.market-browse-collection { overflow: hidden; border-radius: 8px; }
+.market-browse-collection .about__img { border-radius: 0; transition: transform .3s ease; }
+.market-browse-collection:hover .about__img { transform: translateY(-6px); }
+.market-collection-label { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem; background: var(--first-color); color: var(--title-color); }
+.market-collection-label h3 { font-size: var(--large-font-size); }
+.market-account-layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 3rem; align-items: start; }
+.market-profile-section { border-right: 1px solid var(--container-color); padding-right: 2rem; min-width: 0; }
+.market-profile-heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.market-profile-avatar { display: grid; place-items: center; width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%; background: var(--first-color); color: var(--title-color); font-family: var(--second-font); font-size: 1.75rem; }
+.market-profile-role { text-transform: capitalize; font-size: .875rem; }
+.market-profile-section .market-account-data { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+.market-profile-section .market-account-data dt { font-size: .875rem; }
+.market-profile-section .market-account-data dd { color: var(--title-color); margin-bottom: 1rem; }
+.market-profile-actions { display: flex; align-items: center; gap: 1.5rem; margin-top: 1.5rem; }
+.market-profile-actions .market-plain { min-height: 44px; color: var(--second-color); }
+.market-account-main { min-width: 0; }
+.market-account-shortcuts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; margin-bottom: 3rem; }
+.market-account-shortcuts a { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; color: var(--title-color); border-bottom: 3px solid var(--first-color); padding: 1rem 0; transition: border-color .2s ease; }
+.market-account-shortcuts a:hover { border-color: var(--second-color); }
+.market-account-shortcuts a > i:first-child { font-size: 1.5rem; color: var(--second-color); }
+.market-account-shortcuts a > i:last-child { margin-left: auto; }
+.market-account-shortcuts span { flex: 1 1 120px; min-width: 0; }
+.market-account-shortcuts strong { display: block; font-family: var(--second-font); font-weight: var(--weight-400); font-size: var(--large-font-size); }
+.market-account-shortcuts small { display: block; color: var(--text-color); margin-top: .5rem; line-height: 1.6; overflow-wrap: anywhere; }
+.market-section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; }
+.market-section-heading a { color: var(--second-color); min-height: 44px; display: inline-flex; align-items: center; gap: .5rem; }
+.market-recent-orders .market-order p { text-transform: capitalize; overflow-wrap: anywhere; }
+.market-recent-orders .market-order summary { cursor: pointer; padding-block: .75rem; color: var(--second-color); }
+.market-recent-orders .market-order summary:focus-visible { outline: 2px solid var(--second-color); outline-offset: 2px; }
+.market-account-empty { text-align: center; padding-block: 3rem; }
+.market-account-empty > i { font-size: 3rem; color: var(--second-color); }
+.market-account-empty h3 { margin-top: 1rem; }
+.market-account-empty p { margin-block: .5rem 1.5rem; }
+.market-refreshing { animation: market-refresh 1s linear infinite; }
+@keyframes market-refresh { to { transform: rotate(360deg); } }
+@media (max-width: 992px) {
+  .market-account-layout { grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 2rem; }
+  .market-account-shortcuts { grid-template-columns: 1fr; gap: .5rem; }
+}
+@media (max-width: 768px) {
+  .market-account-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .market-profile-section { border-right: none; border-bottom: 1px solid var(--container-color); padding: 0 0 2rem; }
+  .market-profile-section .market-account-data { grid-template-columns: 90px minmax(0, 1fr); gap: 1rem; }
+  .market-profile-section .market-account-data dd { margin-bottom: 0; }
+  .market-discovery { padding-top: .5rem; }
+  .market-home-collections { padding-block: 3rem; }
+  .home .home__content { gap: .5rem; }
+  .home .home__description { font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+  .home .home__subtitle { font-size: 1.125rem; }
+  .home .home__img { height: 200px; }
+  .home .swiper-pagination { margin-top: 1.5rem; }
+  .market-home-search { gap: .75rem; }
+  .market-home-search .button { padding: 1rem; }
+  .market-popular-links { justify-content: flex-start; gap: .5rem 1rem; font-size: .875rem; }
+}
+@media (max-width: 360px) {
+  .market-home-search { flex-wrap: wrap; }
+  .market-home-search .market-search { flex-basis: 100%; }
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto; transition: none !important; animation: none !important; }
   .reveal-ready { opacity: 1; transform: none; }
