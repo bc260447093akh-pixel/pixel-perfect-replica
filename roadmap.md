@@ -1,5 +1,5 @@
 # Marketplace adaptation
-- [ ] Add responsive WebP variants and lazy loading across product images.
+- [x] Add 160/320/640/1024px responsive WebP choices across product images with slot-specific sizes and lazy loading; first homepage banner stays eager. Image files and rendered page attributes verified without browser automation.
 - [x] Compress all four bundled product images to transparent WebP (94% smaller); verify image responses and homepage references without browser automation.
 - [x] Add blank-URL sample accounts and populated customer, seller, and admin pages with original controls; sample-data checks pass, no browser automation used.
 - [x] Preserve styling and logo; replace restaurant imagery/content with shopping and automatic banners.
