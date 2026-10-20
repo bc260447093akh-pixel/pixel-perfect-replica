@@ -8,7 +8,11 @@ import { useMarket } from '@/components/market-provider';
 
 export const Route = createFileRoute('/products/$slug')({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(productOptions(params.slug)),
-  head: ({ loaderData }) => pageHead(loaderData?.name || 'Product', loaderData?.description || 'Explore this product on Kings Marketplace.'),
+  head: ({ loaderData }) => {
+    const head = pageHead(loaderData?.name || 'Product', loaderData?.description || 'Explore this product on Kings Marketplace.');
+    const image = loaderData?.image;
+    return image?.startsWith('https://') ? { meta: [...head.meta, { property: 'og:image', content: image }, { name: 'twitter:image', content: image }] } : head;
+  },
   errorComponent: MarketError, notFoundComponent: MarketNotFound,
   component: ProductDetail,
 });
