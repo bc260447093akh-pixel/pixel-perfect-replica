@@ -1,4 +1,5 @@
 # Marketplace adaptation
+- [ ] Add blank-URL sample accounts and populated customer, seller, and admin pages with original controls.
 - [x] Preserve styling and logo; replace restaurant imagery/content with shopping and automatic banners.
 - [x] Add catalog, details, cart, checkout, account, orders, vendor and admin pages using the supplied API.
 - [x] Document API base URL setup and verify available compilation signals without browser automation.
