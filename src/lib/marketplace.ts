@@ -3,6 +3,7 @@ import headphones from '@/assets/market-headphones.png';
 import sneakers from '@/assets/market-sneakers.png';
 import style from '@/assets/market-style.png';
 import tech from '@/assets/market-tech.png';
+import { usePreviewData } from './marketplace-demo';
 
 export type Role = 'customer' | 'vendor' | 'admin';
 export type Vendor = { id: number; shop_name: string; shop_description?: string; is_approved?: boolean; products_count?: number };
@@ -12,8 +13,8 @@ export type Page<T> = { data: T[]; links?: { next?: string | null; prev?: string
 export type Order = { id: number; order_number: string; total_amount: number; status: string; payment_status?: string; payment_method?: string; shipping_amount?: number; items?: { id: number; quantity: number; price: number; subtotal: number; product?: { name: string; slug: string } }[] };
 export type Ledger = { order_amount: number; commission_fee: number; vendor_earning: number; created_at: string };
 export type AuthResponse = { user: User; access_token: string; expires_in?: number };
-export const apiBase = (import.meta.env['VITE_API_BASE_URL'] || '').replace(/\/+$/, '');
-export const configured = Boolean(apiBase);
+export const apiBase = (import.meta.env['VITE_API_BASE_URL'] || '').trim().replace(/\/+$/, '');
+export const configured = !usePreviewData(apiBase);
 export const paymentMethods = ['jazzcash', 'easypaisa', 'cod'] as const;
 export function canCheckout(role: Role) { return role === 'customer' || role === 'admin'; }
 export function canManageProducts(user: User) { return user.role === 'vendor' && user.vendor?.is_approved === true; }
