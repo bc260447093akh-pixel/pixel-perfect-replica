@@ -14,3 +14,4 @@
 - Keep sample account fixtures and in-memory operations in marketplace-demo; MarketProvider restores preview roles from separate tab storage only with an empty API URL, so mock identities never authenticate live requests.
 - Shared auth/cart state lives in MarketProvider; auth uses the external JWT contract and protected API reads mount only after restored-session role checks, while the backend remains the permission authority.
 - Content pages are separate TanStack leaf routes with unique head metadata; the root provides shared marketplace navigation and footer.
+- Use MarketImage for bundled product imagery with explicit WebP width variants and CSS-slot sizes; lazy-load by default, keeping only the first homepage banner eager, and leave external image URLs unchanged without a transformer contract.
