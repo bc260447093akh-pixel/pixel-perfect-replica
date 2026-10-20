@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
-import headphones from '@/assets/market-headphones.png';
-import sneakers from '@/assets/market-sneakers.png';
-import style from '@/assets/market-style.png';
-import tech from '@/assets/market-tech.png';
+import headphones from '@/assets/market-headphones.webp';
+import sneakers from '@/assets/market-sneakers.webp';
+import style from '@/assets/market-style.webp';
+import tech from '@/assets/market-tech.webp';
 import { usePreviewData } from './marketplace-demo';
 
 export type Role = 'customer' | 'vendor' | 'admin';
@@ -53,7 +53,11 @@ export const demoProducts: Product[] = [
   { id: -3, name: 'City Tote & Accessories', slug: 'city-tote', description: 'A bright new addition to your daily rotation. A structured tote and matching everyday essentials.', image: style, price: 8900, stock_quantity: 10, vendor: { id: -3, shop_name: 'Style House' } },
   { id: -4, name: 'Connected Essentials', slug: 'connected-essentials', description: 'A closer look at the latest tech essentials. A placeholder collection for your future product range.', image: tech, price: 45900, stock_quantity: 5, vendor: { id: -1, shop_name: 'Sound Studio' } },
 ];
-export function productImage(p: Product) { return p.image || headphones; }
+export function productImage(p: Product) {
+  // Previously saved preview carts may still contain the old PNG URL.
+  const sample = p.id < 0 ? demoProducts.find(item => item.id === p.id) : undefined;
+  return sample?.image || p.image || headphones;
+}
 export type CatalogFilters = { page: number; search: string; vendor_id: string };
 export const catalogOptions = (filters: CatalogFilters) => queryOptions({
   queryKey: ['products', filters],
