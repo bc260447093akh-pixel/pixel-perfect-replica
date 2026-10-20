@@ -22,11 +22,11 @@ export function MarketHome() {
   const slideshow = useRef<{ autoplay: { start: () => boolean; stop: () => boolean } } | null>(null);
   useEffect(() => {
     let cancelled = false;
-    let swiper: { destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void } | undefined;
+    let swiper: import('swiper').default | undefined;
     void Promise.all([import('swiper'), import('swiper/modules')]).then(([{ default: Swiper }, { Navigation, Pagination, Autoplay, A11y }]) => {
       if (cancelled) return;
       swiper = new Swiper('.home-swiper', { modules: [Navigation, Pagination, Autoplay, A11y], loop: true, spaceBetween: 30, grabCursor: true, autoplay: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? false : { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }, pagination: { el: '.swiper-pagination', clickable: true }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' } });
-      slideshow.current = swiper as typeof slideshow.current;
+      slideshow.current = swiper;
       setPaused(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     });
     return () => { cancelled = true; slideshow.current = null; swiper?.destroy(true, true); };
