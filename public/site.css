@@ -1411,6 +1411,7 @@ img {
 }
 
 /* Marketplace additions reuse the original palette, fonts and button treatment. */
+.home, .footer { background-image: none; background-color: var(--title-color); }
 .market-inner-header { background: var(--title-color); position: relative; }
 .market-nav-actions { display: flex; align-items: center; gap: 1.5rem; }
 .market-cart-button { white-space: nowrap; }

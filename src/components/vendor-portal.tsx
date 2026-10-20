@@ -6,7 +6,7 @@ import { PrivateData } from './private-data';
 import { MarketButton } from './market-button';
 import { PageSection } from './market-shell';
 import { OrderList } from './order-list';
-import { money, pageRows, type Vendor, type Product, type Order, type Ledger, type Page } from '@/lib/marketplace';
+import { money, pageRows, canManageProducts, type Vendor, type Product, type Order, type Ledger, type Page } from '@/lib/marketplace';
 
 export function LedgerTable({ rows }: { rows: Ledger[] }) { return <div className="market-table-wrap"><table className="market-table"><thead><tr><th>Order amount</th><th>Commission</th><th>Seller earning</th><th>Date</th></tr></thead><tbody>{rows.map((row, i) => <tr key={i}><td>{money(row.order_amount)}</td><td>{money(row.commission_fee)}</td><td>{money(row.vendor_earning)}</td><td>{new Date(row.created_at).toLocaleDateString('en-PK', { timeZone: 'UTC' })}</td></tr>)}</tbody></table>{!rows.length && <p>No earnings yet.</p>}</div>; }
 export function VendorPortal() {
@@ -33,9 +33,10 @@ function VendorProducts({ vendor }: { vendor: Vendor }) {
   const [editing, setEditing] = useState<Product | 'new' | null>(null);
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
-  const { request } = useMarket();
+  const { request, user } = useMarket();
   const query = useQueryClient();
-  return <><div className="market-actions"><MarketButton disabled={!vendor.is_approved} onClick={() => setEditing('new')}><i className="ri-add-line" /> New Product</MarketButton></div>
+  const allowed = user ? canManageProducts({ ...user, vendor }) : false;
+  return <><div className="market-actions"><MarketButton disabled={!allowed} onClick={() => setEditing('new')}><i className="ri-add-line" /> New Product</MarketButton></div>
     {editing && vendor.is_approved && <ProductEditor key={editing === 'new' ? 'new' : editing.id} product={editing === 'new' ? undefined : editing} close={() => setEditing(null)} />}
     {message && <p className="market-error" role="status">{message}</p>}
     <PrivateData<Page<Product>> key={page} path={`/products?vendor_id=${vendor.id}&page=${page}&per_page=15`}>{data => <><div className="market-table-wrap"><table className="market-table"><thead><tr><th>Product</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>{pageRows(data).map(product => <tr key={product.id}><td><Link to="/products/$slug" params={{ slug: product.slug }}>{product.name}</Link></td><td>{money(product.price)}</td><td>{product.stock_quantity}</td><td><div className="market-actions"><MarketButton variant="icon" title="Edit product" aria-label={`Edit ${product.name}`} disabled={!vendor.is_approved || busy} onClick={() => setEditing(product)}><i className="ri-edit-line" /></MarketButton><MarketButton variant="icon" title="Delete product" aria-label={`Delete ${product.name}`} disabled={!vendor.is_approved || busy} onClick={async () => { if (!window.confirm(`Delete ${product.name}?`)) return; setBusy(true); setMessage(''); try { await request(`/vendor/products/${product.id}`, { method: 'DELETE' }); await query.invalidateQueries({ queryKey: ['private'] }); await query.invalidateQueries({ queryKey: ['products'] }); } catch (e) { setMessage(e instanceof Error ? e.message : 'Could not delete product.'); } finally { setBusy(false); } }}><i className="ri-delete-bin-line" /></MarketButton></div></td></tr>)}</tbody></table>{!data.data.length && <p>No public products for this shop yet.</p>}</div><PortalPagination page={page} next={Boolean(data.links?.next)} setPage={setPage} /></>}</PrivateData>

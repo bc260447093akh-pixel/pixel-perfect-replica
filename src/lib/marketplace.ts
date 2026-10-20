@@ -22,7 +22,7 @@ export function priceOf(p: Product) {
   // Flat discount takes precedence when both fields are provided. Backend totals are authoritative.
   return Math.max(0, p.flat_discount != null ? base - Number(p.flat_discount) : base * (1 - Number(p.percentage_discount || 0) / 100));
 }
-export function money(value: number) { return new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', maximumFractionDigits: 2 }).format(Number(value) || 0); }
+export function money(value: number) { return new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', currencyDisplay: 'code', maximumFractionDigits: 2 }).format(Number(value) || 0); }
 export class ApiError extends Error {
   constructor(message: string, public code = '', public details: Record<string, unknown> = {}, public status = 0) { super(message); }
 }

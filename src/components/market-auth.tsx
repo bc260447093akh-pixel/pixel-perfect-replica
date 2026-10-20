@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
-import { api, configured, type AuthResponse, type Role } from '@/lib/marketplace';
+import { api, configured, canCheckout, type AuthResponse, type Role } from '@/lib/marketplace';
 import { useMarket } from './market-provider';
 import { MarketButton } from './market-button';
 import { PageSection } from './market-shell';
@@ -9,7 +9,7 @@ export function AccessGate({ roles, children }: { roles?: Role[]; children: Reac
   const { ready, user } = useMarket();
   if (!ready) return <PageSection title="Your Account"><p>Loading your account…</p></PageSection>;
   if (!user) return <PageSection title="Welcome Back"><p>Sign in to view your account.</p><MarketButton asChild><Link to="/login">Sign In</Link></MarketButton></PageSection>;
-  if (roles && !roles.includes(user.role)) return <PageSection title="Access Unavailable"><p>This page is not available for your account.</p><MarketButton asChild><Link to="/account">My Account</Link></MarketButton></PageSection>;
+  if (roles && (roles.length === 2 && roles.includes('customer') && roles.includes('admin') ? !canCheckout(user.role) : !roles.includes(user.role))) return <PageSection title="Access Unavailable"><p>This page is not available for your account.</p><MarketButton asChild><Link to="/account">My Account</Link></MarketButton></PageSection>;
   return <>{children}</>;
 }
 export function AuthForm({ register = false }: { register?: boolean }) {
