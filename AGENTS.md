@@ -11,5 +11,6 @@
 
 - Use the original site CSS classes and a shared MarketButton wrapper for marketplace controls so ecommerce additions retain the existing visual language.
 - Keep external API contracts and public catalog query options in the marketplace library; a public Vite base URL switches between explicit preview products and live requests, with no local backend.
+- Keep sample account fixtures and in-memory operations in marketplace-demo; MarketProvider restores preview roles from separate tab storage only with an empty API URL, so mock identities never authenticate live requests.
 - Shared auth/cart state lives in MarketProvider; auth uses the external JWT contract and protected API reads mount only after restored-session role checks, while the backend remains the permission authority.
 - Content pages are separate TanStack leaf routes with unique head metadata; the root provides shared marketplace navigation and footer.

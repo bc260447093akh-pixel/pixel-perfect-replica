@@ -18,6 +18,7 @@ export function AuthForm({ register = false }: { register?: boolean }) {
   const [error, setError] = useState('');
   const { signIn, user } = useMarket();
   const navigate = useNavigate();
+  if (!configured) return <PageSection title={user ? `Hello, ${user.username}` : 'Sample Accounts'} subtitle="Marketplace Preview"><p className="market-warning">Sample data only · No real orders or payments.</p>{user && <MarketButton asChild><Link to={user.role === 'vendor' ? '/vendor' : user.role === 'admin' ? '/admin' : '/account'}>Open My Profile <i className="ri-arrow-right-line" /></Link></MarketButton>}</PageSection>;
   return <PageSection title={register ? 'Join The Marketplace' : 'Welcome Back'} subtitle={register ? 'Your Next Chapter Starts Here' : 'Your Favourites Are Waiting'}>
     {user ? <div><p>Signed in as {user.username}.</p><MarketButton asChild><Link to="/account">My Account</Link></MarketButton></div> : <form className="market-form" onSubmit={async event => {
       event.preventDefault(); setBusy(true); setError(''); const form = new FormData(event.currentTarget);

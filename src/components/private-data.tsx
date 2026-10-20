@@ -10,7 +10,8 @@ class DataBoundary extends Component<{ children: ReactNode }, { error: Error | n
 }
 
 export function PrivateData<T>({ path, children }: { path: string; children: (data: T) => ReactNode }) {
-  return <DataBoundary><Suspense fallback={<p>Loading…</p>}><PrivateResult<T> path={path}>{children}</PrivateResult></Suspense></DataBoundary>;
+  const { user } = useMarket();
+  return <DataBoundary key={`${user?.id}-${path}`}><Suspense fallback={<p>Loading…</p>}><PrivateResult<T> path={path}>{children}</PrivateResult></Suspense></DataBoundary>;
 }
 function PrivateResult<T>({ path, children }: { path: string; children: (data: T) => ReactNode }) {
   const { request, user } = useMarket();

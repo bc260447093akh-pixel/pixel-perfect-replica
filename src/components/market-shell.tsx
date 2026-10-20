@@ -2,6 +2,8 @@ import { Link, useLocation, useRouter, type ErrorComponentProps } from '@tanstac
 import { useEffect, useState, type ReactNode } from 'react';
 import { MarketButton } from './market-button';
 import { useMarket } from './market-provider';
+import { DemoAccounts } from './demo-accounts';
+import { configured } from '@/lib/marketplace';
 
 const logo = 'https://raw.githubusercontent.com/ViniciusJMoreira/foodio-restaurant/main/assets/img/logo.png';
 const darkLogo = 'https://raw.githubusercontent.com/ViniciusJMoreira/foodio-restaurant/main/assets/img/logo-dark.png';
@@ -36,8 +38,9 @@ export function MarketShell({ children }: { children: ReactNode }) {
           <li><Link to="/" className={`nav__link ${pathname === '/' ? 'active-link' : ''}`}>Home</Link></li>
           <li><Link to="/products" search={{ page: 1, search: '', vendor_id: '' }} className={`nav__link ${pathname.startsWith('/products') ? 'active-link' : ''}`}>Shop</Link></li>
           <li><Link to="/orders" className="nav__link">Orders</Link></li>
-          <li><Link to={user ? '/account' : '/login'} className="nav__link">{user ? 'Account' : 'Sign In'}</Link></li>
+          <li><Link to={user || !configured ? '/account' : '/login'} className="nav__link">{user || !configured ? 'My Profile' : 'Sign In'}</Link></li>
           <li><Link to={user?.role === 'vendor' ? '/vendor' : '/register'} className="nav__link">{user?.role === 'vendor' ? 'My Shop' : 'Sell With Us'}</Link></li>
+          {user?.role === 'admin' && <li><Link to="/admin" className="nav__link">Admin</Link></li>}
         </ul>
         <MarketButton variant="plain" className="nav__close" aria-label="Close menu" onClick={() => setOpen(false)}><i className="ri-close-circle-line" /></MarketButton>
       </div>
@@ -46,10 +49,10 @@ export function MarketShell({ children }: { children: ReactNode }) {
         <MarketButton asChild className="market-cart-button"><Link to="/cart"><i className="ri-shopping-bag-line" /> <span>Cart ({cart.reduce((n, row) => n + row.quantity, 0)})</span></Link></MarketButton>
       </div>
     </nav></header>
-    <main className={`main ${pathname !== '/' ? 'market-inner-main' : ''}`}>{children}</main>
+    <main className={`main ${pathname !== '/' ? 'market-inner-main' : ''}`}>{pathname !== '/' && !configured && <div className="container"><DemoAccounts /></div>}{children}</main>
     <footer className="footer"><div className="footer__container container grid section">
       <div><Link to="/"><img src={logo} alt="Kings" className="footer__logo-img" /></Link><p className="footer__description">Your next favourite find. Shop everyday essentials, fresh styles, and tech from independent sellers.</p><MarketButton asChild><Link to="/products" search={{ page: 1, search: '', vendor_id: '' }}>Explore The Shop</Link></MarketButton></div>
-      <div><h3 className="footer__title">Your Marketplace</h3><div className="market-footer-links"><Link to="/products" search={{ page: 1, search: '', vendor_id: '' }}>All Products <i className="ri-arrow-right-up-line" /></Link><Link to="/orders">My Orders <i className="ri-arrow-right-up-line" /></Link><Link to="/register">Become a Seller <i className="ri-arrow-right-up-line" /></Link><Link to="/account">My Account <i className="ri-arrow-right-up-line" /></Link></div><p className="footer__description">JazzCash · Easypaisa · Cash on delivery<br />All prices in Pakistani Rupees.</p></div>
+      <div><h3 className="footer__title">Your Marketplace</h3><div className="market-footer-links"><Link to="/products" search={{ page: 1, search: '', vendor_id: '' }}>All Products <i className="ri-arrow-right-up-line" /></Link><Link to="/orders">My Orders <i className="ri-arrow-right-up-line" /></Link><Link to="/register">Become a Seller <i className="ri-arrow-right-up-line" /></Link><Link to="/account">My Account <i className="ri-arrow-right-up-line" /></Link></div><p className="footer__description">JazzCash · Easypaisa · Cash on delivery<br />All prices in Pakistani Rupees.</p><DemoAccounts /></div>
     </div><div className="footer__copy">© 2026 <span>Kings Marketplace</span></div></footer>
     {notice && <div className="market-notice" role="status">{notice}<MarketButton variant="plain" aria-label="Dismiss notification" onClick={() => setNotice('')}><i className="ri-close-line" /></MarketButton></div>}
     <MarketButton variant="plain" className={`scrollup ${scroll ? 'show-scroll' : ''}`} title="Back to top" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><i className="ri-arrow-up-line scrollup__icon" /></MarketButton>

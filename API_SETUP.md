@@ -4,6 +4,8 @@
 2. Allow the preview and published website origins in your backend CORS configuration. Allow `Accept`, `Content-Type`, and `Authorization` headers and GET/POST/PUT/PATCH/DELETE/OPTIONS. Production needs HTTPS.
 3. Rebuild/publish after changing a Vite environment variable. Blank URL shows clearly labelled sample products. Failed live requests show errors, never fake success or silently substitute preview data.
 
+With an empty URL, a sample customer account opens automatically. Use **Customer Profile**, **Seller Profile**, or **Admin Panel** in the footer or above inner pages to switch sample accounts. Customer orders, seller profile/products/orders/earnings, and admin statistics/approvals/earnings are populated with invented sample data. Seller edits and admin approvals run in memory and reset on reload; the preview role uses separate tab storage, never live session storage. Checkout and real payment submission remain disabled. Setting a URL removes sample account controls and requires real sign-in.
+
 ## Implemented endpoints
 
 - Auth: register, login, me, logout, refresh.
