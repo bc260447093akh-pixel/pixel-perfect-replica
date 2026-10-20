@@ -12,7 +12,7 @@ export type Page<T> = { data: T[]; links?: { next?: string | null; prev?: string
 export type Order = { id: number; order_number: string; total_amount: number; status: string; payment_status?: string; payment_method?: string; shipping_amount?: number; items?: { id: number; quantity: number; price: number; subtotal: number; product?: { name: string; slug: string } }[] };
 export type Ledger = { order_amount: number; commission_fee: number; vendor_earning: number; created_at: string };
 export type AuthResponse = { user: User; access_token: string; expires_in?: number };
-export const apiBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+export const apiBase = (import.meta.env['VITE_API_BASE_URL'] || '').replace(/\/+$/, '');
 export const configured = Boolean(apiBase);
 export const paymentMethods = ['jazzcash', 'easypaisa', 'cod'] as const;
 export function canCheckout(role: Role) { return role === 'customer' || role === 'admin'; }
@@ -31,7 +31,7 @@ export async function api<T>(path: string, options: { method?: string; body?: un
   let response: Response;
   try {
     response = await fetch(`${apiBase}${path}`, {
-      method: options.method || 'GET', signal: options.signal,
+      method: options.method || 'GET', ...(options.signal ? { signal: options.signal } : {}),
       headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}) },
       ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
     });

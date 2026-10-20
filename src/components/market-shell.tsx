@@ -56,5 +56,5 @@ export function MarketShell({ children }: { children: ReactNode }) {
   </>;
 }
 export function PageSection({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) { return <section className="section container market-page"><span className="section__subtitle">{subtitle || 'Kings Marketplace'}</span><h1 className="section__title market-page-title">{title}</h1>{children}</section>; }
-export function MarketError({ error }: ErrorComponentProps) { const router = useRouter(); return <PageSection title="Something went wrong"><p role="alert">{error.message}</p><MarketButton onClick={() => void router.invalidate()}>Try Again</MarketButton></PageSection>; }
+export function MarketError({ error }: ErrorComponentProps) { const router = useRouter(); return <PageSection title="Something went wrong"><p role="alert">{error instanceof Error ? error.message : 'Please try again.'}</p><MarketButton onClick={() => void router.invalidate()}>Try Again</MarketButton></PageSection>; }
 export function MarketNotFound() { return <PageSection title="Not found"><p>This item is no longer available.</p><MarketButton asChild><Link to="/products" search={{ page: 1, search: '', vendor_id: '' }}>Back To Shop</Link></MarketButton></PageSection>; }

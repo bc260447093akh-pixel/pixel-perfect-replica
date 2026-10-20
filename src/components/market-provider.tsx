@@ -40,7 +40,7 @@ export function MarketProvider({ children }: { children: ReactNode }) {
     setSession(s); setNotice(''); queryClient.removeQueries({ queryKey: ['private'] });
     try { localStorage.setItem('kings-session', JSON.stringify(s)); } catch { /* Session remains available in memory. */ }
   }
-  async function request<T>(path: string, options: { method?: string; body?: unknown } = {}) { return api<T>(path, { ...options, token: session?.token }); }
+  async function request<T>(path: string, options: { method?: string; body?: unknown } = {}) { return api<T>(path, { ...options, token: session?.token || '' }); }
   async function logout() {
     try { if (session && configured) await request('/auth/logout', { method: 'POST' }); }
     finally { setSession(null); setCart([]); localStorage.removeItem('kings-session'); queryClient.removeQueries({ queryKey: ['private'] }); await navigate({ to: '/login' }); }

@@ -6,7 +6,7 @@ import { MarketButton } from '@/components/market-button';
 import { PageSection, MarketError, MarketNotFound } from '@/components/market-shell';
 
 export const Route = createFileRoute('/products/')({
-  validateSearch: (s: Record<string, unknown>) => ({ page: Math.max(1, Number(s.page) || 1), search: typeof s.search === 'string' ? s.search : '', vendor_id: typeof s.vendor_id === 'string' ? s.vendor_id : '' }),
+  validateSearch: (s: Record<string, unknown>) => ({ page: Math.max(1, Number(s['page']) || 1), search: typeof s['search'] === 'string' ? s['search'] : '', vendor_id: typeof s['vendor_id'] === 'string' ? s['vendor_id'] : '' }),
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) => context.queryClient.ensureQueryData(catalogOptions(deps)),
   head: () => pageHead('Shop All Products', 'Browse independent sellers, search products and discover your next favourite find.'),
