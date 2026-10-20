@@ -55,7 +55,7 @@ function Index() {
     const tabContents = document.querySelectorAll("[content]");
     tabs.forEach((tab) => {
       const onClick = () => {
-        const target = document.querySelector(tab.dataset.target!);
+        const target = document.querySelector(tab.dataset["target"]!);
         tabContents.forEach((c) => c.classList.remove("active-tab"));
         target?.classList.add("active-tab");
         tabs.forEach((t) => t.classList.remove("active-tab"));
