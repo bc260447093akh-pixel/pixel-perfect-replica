@@ -8,3 +8,8 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Use the original site CSS classes and a shared MarketButton wrapper for marketplace controls so ecommerce additions retain the existing visual language.
+- Keep external API contracts and public catalog query options in the marketplace library; a public Vite base URL switches between explicit preview products and live requests, with no local backend.
+- Shared auth/cart state lives in MarketProvider; auth uses the external JWT contract and protected API reads mount only after restored-session role checks, while the backend remains the permission authority.
+- Content pages are separate TanStack leaf routes with unique head metadata; the root provides shared marketplace navigation and footer.
