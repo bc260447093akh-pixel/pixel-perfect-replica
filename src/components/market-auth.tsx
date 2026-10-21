@@ -16,8 +16,8 @@ export function AccessGate({ roles, children }: { roles?: Role[]; children: Reac
   if (roles && (roles.length === 2 && roles.includes('customer') && roles.includes('admin') ? !canCheckout(user.role) : !roles.includes(user.role))) return <PageSection title="Access Unavailable"><p>This page is not available for your account.</p><MarketButton asChild><Link to="/account">My Account</Link></MarketButton></PageSection>;
   return <>{children}</>;
 }
-export function AuthForm({ register = false }: { register?: boolean }) {
-  const [role, setRole] = useState<'customer' | 'vendor'>('customer');
+export function AuthForm({ register = false, initialRole = 'customer' }: { register?: boolean; initialRole?: 'customer' | 'vendor' }) {
+  const [role, setRole] = useState<'customer' | 'vendor'>(initialRole);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const { signIn, user } = useMarket();
@@ -37,7 +37,7 @@ export function AuthForm({ register = false }: { register?: boolean }) {
       {!configured && <p className="market-warning">Sign-in and registration will be available when the shop is connected.</p>}
       {error && <p className="market-error" role="alert">{error}</p>}
       <MarketButton type="submit" disabled={busy || !configured}>{busy ? 'Please Wait…' : register ? 'Create Account' : 'Sign In'}</MarketButton>
-      <p>{register ? 'Already have an account?' : 'New to the marketplace?'} <Link to={register ? '/login' : '/register'}>{register ? 'Sign in' : 'Create an account'} <i className="ri-arrow-right-line" /></Link></p>
+      <p>{register ? 'Already have an account?' : 'New to the marketplace?'} {register ? <Link to="/login">Sign in <i className="ri-arrow-right-line" /></Link> : <Link to="/register" search={{ role: 'customer' }}>Create an account <i className="ri-arrow-right-line" /></Link>}</p>
     </form>}
   </PageSection>;
 }

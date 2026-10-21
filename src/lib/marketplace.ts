@@ -8,13 +8,17 @@ import { usePreviewData } from './marketplace-demo';
 export type Role = 'customer' | 'vendor' | 'admin';
 export type Vendor = { id: number; shop_name: string; shop_description?: string; is_approved?: boolean; products_count?: number };
 export type User = { id: number; username: string; email: string; role: Role; vendor: Vendor | null };
-export type Product = { id: number; vendor_id?: number; name: string; slug: string; description?: string; image?: string; price: number; stock_quantity: number; total_sold?: number; is_active?: boolean; flat_discount?: number | null; percentage_discount?: number | null; vendor?: Vendor };
+export type Product = { id: number; vendor_id?: number; name: string; slug: string | null; description?: string; image?: string; price: number; stock_quantity: number; total_sold?: number; is_active?: boolean; flat_discount?: number | null; percentage_discount?: number | null; vendor?: Vendor };
 export type Page<T> = { data: T[]; links?: { next?: string | null; prev?: string | null }; meta?: { current_page: number; per_page: number; total: number } };
 export type Order = { id: number; order_number: string; total_amount: number; status: string; payment_status?: string; payment_method?: string; shipping_amount?: number; items?: { id: number; quantity: number; price: number; subtotal: number; product?: { name: string; slug: string } }[] };
 export type Ledger = { order_amount: number; commission_fee: number; vendor_earning: number; created_at: string };
 export type AuthResponse = { user: User; access_token: string; expires_in?: number };
 export const apiBase = (import.meta.env['VITE_API_BASE_URL'] || '').trim().replace(/\/+$/, '');
 export const configured = !usePreviewData(apiBase);
+export function connectionHeaders(base: string): Record<string, string> {
+  return new URL(base).hostname.endsWith('.ngrok-free.dev') ? { 'ngrok-skip-browser-warning': '69420' } : {};
+}
+export function productKey(product: Pick<Product, 'id' | 'slug'>) { return product.slug?.trim() || `id-${product.id}`; }
 export const paymentMethods = ['jazzcash', 'easypaisa', 'cod'] as const;
 export function canCheckout(role: Role) { return role === 'customer' || role === 'admin'; }
 export function canManageProducts(user: User) { return user.role === 'vendor' && user.vendor?.is_approved === true; }
@@ -33,14 +37,14 @@ export async function api<T>(path: string, options: { method?: string; body?: un
   try {
     response = await fetch(`${apiBase}${path}`, {
       method: options.method || 'GET', ...(options.signal ? { signal: options.signal } : {}),
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}) },
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...connectionHeaders(apiBase), ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}) },
       ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
     });
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') throw error;
     throw new ApiError('We could not reach the shop. Please check your connection and try again.', 'NETWORK_ERROR');
   }
-  const data = await response.json().catch(() => ({}));
+   const data = await response.json().catch(() => { throw new ApiError('The shop returned an unexpected response. Please try again.', 'INVALID_RESPONSE'); });
   if (!response.ok) {
     if (response.status === 401 && typeof window !== 'undefined') window.dispatchEvent(new Event('market-unauthorized'));
     throw new ApiError(data.message || `Request failed (${response.status}).`, data.code, data.details, response.status);
@@ -66,7 +70,7 @@ export const catalogOptions = (filters: CatalogFilters) => queryOptions({
       const data = demoProducts.filter(p => (!filters.search || p.name.toLowerCase().includes(filters.search.toLowerCase())) && (!filters.vendor_id || String(p.vendor?.id) === filters.vendor_id));
       return { data, meta: { current_page: 1, per_page: 15, total: data.length } } satisfies Page<Product>;
     }
-    const search = new URLSearchParams({ page: String(filters.page), per_page: '15' });
+    const search = new URLSearchParams({ page: String(filters.page), per_page: '20' });
     if (filters.search) search.set('search', filters.search);
     if (filters.vendor_id) search.set('vendor_id', filters.vendor_id);
     return api<Page<Product>>(`/products?${search}`, { signal });
@@ -77,9 +81,23 @@ export const productOptions = (slug: string) => queryOptions({
   queryKey: ['product', slug],
   queryFn: async ({ signal }) => {
     if (!configured) {
-      const data = demoProducts.find(p => p.slug === slug);
+      const data = demoProducts.find(p => productKey(p) === slug);
       if (!data) throw new ApiError('This product is not available.', 'NOT_FOUND', {}, 404);
       return data;
+    }
+    // Some live catalogs omit slugs and do not expose a detail-by-ID endpoint.
+    // Resolve a stable ID link through fresh public catalog pages instead.
+    if (/^id-\d+$/.test(slug)) {
+      const id = Number(slug.slice(3));
+      let page = 1;
+      while (true) {
+        const result = await api<Page<Product>>(`/products?page=${page}&per_page=20`, { signal });
+        const product = result.data.find(item => item.id === id);
+        if (product) return product;
+        if (!result.links?.next || !result.data.length) break;
+        page += 1;
+      }
+      throw new ApiError('This product is not available.', 'NOT_FOUND', {}, 404);
     }
     return (await api<{ data: Product }>(`/products/${encodeURIComponent(slug)}`, { signal })).data;
   },
