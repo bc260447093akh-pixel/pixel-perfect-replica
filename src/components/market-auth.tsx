@@ -9,7 +9,7 @@ export function AccessGate({ roles, children }: { roles?: Role[]; children: Reac
   const { ready, user, previewAs } = useMarket();
   const roleKey = (roles || []).join(',');
   // Without a live backend, account routes open the matching sample profile automatically.
-  useEffect(() => { if (ready && !configured && roles?.length && (!user || !roles.includes(user.role))) previewAs(roles[0]); }, [ready, user, roleKey, previewAs]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { const first = roles?.[0]; if (ready && !configured && first && (!user || !roles?.includes(user.role))) previewAs(first); }, [ready, user, roleKey, previewAs]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!ready) return <PageSection title="Your Account"><p>Loading your account…</p></PageSection>;
   if (!user) return <PageSection title="Welcome Back"><p>Sign in to view your account.</p><MarketButton asChild><Link to="/login">Sign In</Link></MarketButton></PageSection>;
   if (!configured && roles?.length && !roles.includes(user.role)) return <PageSection title="Your Account"><p>Loading your account…</p></PageSection>;
