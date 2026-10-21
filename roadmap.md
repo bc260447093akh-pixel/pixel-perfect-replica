@@ -1,4 +1,5 @@
 # Marketplace adaptation
+- [ ] Show live catalog products in homepage banners and collections; verify catalog, detail, sign-in, registration, and profile URLs without browser automation.
 - [x] Improve home shopping discovery and customer account navigation while preserving the original style.
 - [x] Replace sample account buttons with automatic sample profiles on account routes when no backend is set.
 - [x] Connect the live backend URL in .env; products list, product detail and CORS verified by direct requests.
